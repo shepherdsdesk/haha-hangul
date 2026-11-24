@@ -615,21 +615,23 @@ for(const k of S.kids){const b=this.kidBlob(k.id);if(all||b!==this.pushed[k.id])
 for(const id of (S.delQ||[])){ws.push(F.deleteDoc(F.doc(db,'academies',ACAD,'kids',id)))}S.delQ=[];
 const cb=this.cfgBlob();if(all||cb!==this.cfgPushed){this.cfgPushed=cb;S.cu=now;ws.push(F.setDoc(F.doc(db,'academies',ACAD,'meta','config'),{classes:S.classes,pin:S.pin,u:now}))}
 saveLocal();try{await Promise.all(ws)}finally{this.busy=false;refreshCloudUI()}},
+toEmail(id){id=id.trim().toLowerCase();return id.includes('@')?id:id+'@hahahangul.app'},
+showId(e){return (e||'').replace(/@hahahangul\.app$/,'')},
 async signIn(email,pw,create){const {U,auth}=await this.load();return create?U.createUserWithEmailAndPassword(auth,email,pw):U.signInWithEmailAndPassword(auth,email,pw)},
 async signOut(){const {U,auth}=await this.load();this.stop();await U.signOut(auth)}};
 window.__cloud=Cloud;
 function softRefresh(){if(view==='select')goSelect();else if(view==='admin')goAdmin(aTab)}
 function refreshCloudUI(){const b=document.getElementById('cloudBox');if(b)renderCloudBox(b)}
-const AUTH_MSG={'auth/email-already-in-use':'이미 만든 계정이에요. 로그인을 눌러 주세요','auth/invalid-credential':'이메일이나 비밀번호가 맞지 않아요','auth/wrong-password':'이메일이나 비밀번호가 맞지 않아요','auth/user-not-found':'없는 계정이에요. 처음이면 원장 계정 만들기를 눌러 주세요','auth/weak-password':'비밀번호는 6자 이상이어야 해요','auth/invalid-email':'이메일 주소를 확인해 주세요','auth/network-request-failed':'인터넷 연결을 확인해 주세요','auth/too-many-requests':'잠시 뒤에 다시 해 주세요'};
+const AUTH_MSG={'auth/email-already-in-use':'이미 있는 아이디예요. 로그인을 눌러 주세요','auth/invalid-credential':'아이디나 비밀번호가 맞지 않아요','auth/wrong-password':'아이디나 비밀번호가 맞지 않아요','auth/user-not-found':'없는 아이디예요. 처음이면 학원 아이디 만들기를 눌러 주세요','auth/weak-password':'비밀번호는 6자 이상이어야 해요','auth/invalid-email':'아이디는 영문·숫자로 써 주세요','auth/network-request-failed':'인터넷 연결을 확인해 주세요','auth/too-many-requests':'잠시 뒤에 다시 해 주세요'};
 function renderCloudBox(b){const C=Cloud;
 if(C.user){const st=C.status==='denied'?'<span class="tag p">이 계정은 학원 기록에 권한이 없어요</span>':C.status!=='on'?'<span class="tag y">연결하는 중</span>':C.busy?'<span class="tag y">저장하는 중</span>':'<span class="tag g">연결됨 · 저장 완료</span>';
-b.innerHTML=`<div class="fl"><span>${st}</span><span class="muted">${esc(C.user.email||'')}</span><button class="btn sm" id="cOut">연결 끊기</button></div><p class="note">이 태블릿의 아이 명단과 학습 기록이 같은 계정으로 연결된 다른 태블릿과 함께 저장돼요. 녹음 소리는 녹음한 태블릿에만 있어요.</p>`;
+b.innerHTML=`<div class="fl"><span>${st}</span><span class="muted">학원 아이디 ${esc(C.showId(C.user.email))}</span><button class="btn sm" id="cOut">연결 끊기</button></div><p class="note">이 태블릿의 아이 명단과 학습 기록이 같은 계정으로 연결된 다른 태블릿과 함께 저장돼요. 녹음 소리는 녹음한 태블릿에만 있어요.</p>`;
 b.querySelector('#cOut').onclick=async()=>{const x=b.querySelector('#cOut');if(!x.dataset.sure){x.dataset.sure=1;x.textContent='한 번 더 누르면 끊겨요';return}await C.signOut();toast('연결을 끊었어요')};return}
 if(C.status==='err'){b.innerHTML=`<p class="note">연결 기능을 불러오지 못했어요. 인터넷 연결을 확인해 주세요.</p><div class="row" style="justify-content:flex-start;margin-top:.6rem"><button class="btn sm" id="cRe">다시 시도</button></div>`;b.querySelector('#cRe').onclick=()=>{C.status='off';C.init();renderCloudBox(b)};return}
-b.innerHTML=`<p class="note" style="margin-bottom:.8rem">두 태블릿에 같은 원장님 계정으로 로그인하면 아이 명단과 학습 기록이 함께 저장돼요. 첫 태블릿에서 한 번만 '원장 계정 만들기'를 누르고, 두 번째 태블릿부터는 '로그인'을 눌러 주세요. 두 번째 태블릿은 로그인하면 그 태블릿의 예시 명단이 지워지고 학원 명단으로 바뀌어요.</p>
-<div class="fl"><input id="cE" type="email" autocomplete="username" placeholder="원장님 이메일" style="width:17rem"><input id="cP" type="password" autocomplete="current-password" placeholder="비밀번호 6자 이상" style="width:13rem"></div>
-<div class="fl"><button class="btn primary sm" id="cIn">로그인</button><button class="btn sm" id="cNew">원장 계정 만들기</button><span class="perr" id="cErr"></span></div>`;
-const go=async create=>{const e=b.querySelector('#cE').value.trim(),p=b.querySelector('#cP').value,er=b.querySelector('#cErr');if(!e||!p){er.textContent='이메일과 비밀번호를 써 주세요';return}er.textContent='';try{await C.signIn(e,p,create);toast('연결했어요')}catch(x){er.textContent=AUTH_MSG[x&&x.code]||'연결하지 못했어요'}};
+b.innerHTML=`<p class="note" style="margin-bottom:.8rem">두 태블릿에 같은 학원 아이디로 로그인하면 아이 명단과 학습 기록이 함께 저장돼요. 이메일은 필요 없어요. 첫 태블릿에서 한 번만 '학원 아이디 만들기'를 누르고, 두 번째 태블릿부터는 '로그인'을 눌러 주세요. 비밀번호를 잊으면 찾을 수 없으니 꼭 적어 두세요. 두 번째 태블릿은 로그인하면 그 태블릿의 예시 명단이 지워지고 학원 명단으로 바뀌어요.</p>
+<div class="fl"><input id="cE" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="학원 아이디 (영문·숫자)" style="width:15rem"><input id="cP" type="password" autocomplete="current-password" placeholder="비밀번호 6자 이상" style="width:13rem"></div>
+<div class="fl"><button class="btn primary sm" id="cIn">로그인</button><button class="btn sm" id="cNew">학원 아이디 만들기</button><span class="perr" id="cErr"></span></div>`;
+const go=async create=>{const raw=b.querySelector('#cE').value.trim(),p=b.querySelector('#cP').value,er=b.querySelector('#cErr');if(!raw||!p){er.textContent='아이디와 비밀번호를 써 주세요';return}if(!raw.includes('@')&&!/^[a-z0-9._-]{3,20}$/i.test(raw)){er.textContent='아이디는 영문·숫자 3~20자로 써 주세요';return}er.textContent='';try{await C.signIn(C.toEmail(raw),p,create);toast('연결했어요')}catch(x){er.textContent=AUTH_MSG[x&&x.code]||'연결하지 못했어요'}};
 b.querySelector('#cIn').onclick=()=>go(false);b.querySelector('#cNew').onclick=()=>go(true)}
 
 /* 화면: 인트로 */
