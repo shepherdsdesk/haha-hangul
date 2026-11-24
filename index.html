@@ -134,7 +134,7 @@ body.admin #bg{display:none}
 .cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border-radius:50%}
 .cloud::before{width:6.6vh;height:6.6vh;left:2.4vh;top:-3.2vh}.cloud::after{width:4.8vh;height:4.8vh;left:7.6vh;top:-2vh}
 @keyframes drift{from{transform:translateX(-30vh)}to{transform:translateX(120vw)}}
-.fl{position:absolute;font-weight:900;opacity:.22;animation:bob ease-in-out infinite alternate}
+.bgl{position:absolute;font-weight:900;opacity:.22;animation:bob ease-in-out infinite alternate}
 @keyframes bob{from{transform:translateY(0) rotate(-10deg)}to{transform:translateY(-2.4vh) rotate(10deg)}}
 .sign{animation:float 3.6s ease-in-out infinite alternate}
 @keyframes float{to{transform:translateY(-1.2vh) rotate(-1deg)}}
@@ -533,7 +533,8 @@ function seed(){return{pin:'0000',classes:['5세반','6세반','7세반','초1�
 {id:uid(),name:'똑똑이',cls:3,animal:'🐼',current:97,queue:[],double:false}]}}
 let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
 if(!S||!S.kids)S=seed();
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const saveLocal=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const save=()=>{saveLocal();if(window.__cloud)window.__cloud.schedule()};
 const kid=id=>S.kids.find(k=>k.id===id);
 const prog=id=>S.prog[id]||(S.prog[id]={sessions:0,stamps:0,log:[],review:{},dict:[],recs:[]});
 const nextLesson=k=>k.queue.length?k.queue[0]:k.current;
@@ -551,7 +552,7 @@ const sfx={good(){tone(784,.15);tone(1047,.3,.12)},bad(){tone(240,.3,0,'triangle
 function stopAudio(){try{speechSynthesis.cancel()}catch(e){}if(curAudio){curAudio.pause();curAudio=null}}
 function tts(t){try{const u=new SpeechSynthesisUtterance(t);u.lang='ko-KR';u.rate=.82;const v=speechSynthesis.getVoices().find(v=>/^ko/i.test(v.lang));if(v)u.voice=v;speechSynthesis.speak(u)}catch(e){}}
 async function speak(t){stopAudio();if(S.voices.includes(t)){const b=await DB.get('v|'+t);if(b){curAudio=new Audio(URL.createObjectURL(b));curAudio.play().catch(()=>{});return}}tts(t)}
-function playBlob(b){stopAudio();if(!b)return toast('녹음 파일이 없어요');curAudio=new Audio(URL.createObjectURL(b));curAudio.play().catch(()=>{})}
+function playBlob(b){stopAudio();if(!b)return toast('이 녹음은 녹음한 태블릿에서만 들을 수 있어요');curAudio=new Audio(URL.createObjectURL(b));curAudio.play().catch(()=>{})}
 try{speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=()=>{}}catch(e){}
 
 let MR=null,recTimer=null;
@@ -571,7 +572,7 @@ try{history.pushState({h:1},'');addEventListener('popstate',()=>{history.pushSta
 const L=['ㄱ','ㅏ','ㅎ','가','ㄴ','ㅗ','하','ㅁ','ㅣ','나','ㅂ','ㅜ'],C=['#E9557F','#1E9DA3','#F4BE34','#B26B35'];
 const spots=[[3,14],[9,46],[4,72],[16,28],[88,20],[93,50],[84,40],[90,70],[30,6],[62,8],[46,4],[76,10]];
 b.innerHTML=[[12,60],[34,95],[22,75]].map(([t,d],i)=>`<div class="cloud" style="top:${t}vh;animation-duration:${d}s;animation-delay:-${i*29}s"></div>`).join('')+
-spots.map(([x,y],i)=>`<span class="fl" style="left:${x}vw;top:${y}vh;color:${C[i%4]};font-size:${2.4+(i%3)*.8}rem;animation-duration:${4+i%4}s;animation-delay:-${i}s">${L[i]}</span>`).join('')+
+spots.map(([x,y],i)=>`<span class="bgl" style="left:${x}vw;top:${y}vh;color:${C[i%4]};font-size:${2.4+(i%3)*.8}rem;animation-duration:${4+i%4}s;animation-delay:-${i}s">${L[i]}</span>`).join('')+
 '<svg class="hills" viewBox="0 0 1440 260" preserveAspectRatio="none"><path d="M0 120Q260 30 560 110T1100 90T1440 100V260H0Z" fill="#D7EBD3"/><path d="M0 170Q300 100 640 165T1200 150T1440 160V260H0Z" fill="#BFE0C2"/><path d="M0 215Q360 180 760 212T1440 205V260H0Z" fill="#F5DDBF"/></svg>';
 document.body.insertBefore(b,document.body.firstChild)})();
 function confetti(x,y,n,rain){const C=['#E9557F','#1E9DA3','#F4BE34','#3A9F63','#B26B35','#9C7BE0'];if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
@@ -583,6 +584,53 @@ d.innerHTML=`<span>${k?k.animal:'🐰'}</span><b>${esc(txt)}</b>`;document.body.
 const GOOD=['딩동댕!','최고예요!','정답이에요!','와, 잘했어요!','하하, 맞았어요!'];
 const centerOf=el=>{const r=el.getBoundingClientRect();return[r.left+r.width/2,r.top+r.height/2]};
 function goodFx(el,combo){const [x,y]=centerOf(el);confetti(x,y,22);cheer(true,combo>=3?`연속 ${combo}개 정답!`:GOOD[Math.random()*GOOD.length|0])}
+
+
+/* 태블릿 연결 (Firebase) */
+const FB_CONFIG={apiKey:"AIzaSyADI4TTZtN4Li8qfisKqaPZ9BLDQPZokWA",authDomain:"haha-hangul.firebaseapp.com",projectId:"haha-hangul",storageBucket:"haha-hangul.firebasestorage.app",messagingSenderId:"402245364990",appId:"1:402245364990:web:6566658da7cf476d74c9af"};
+const ACAD='haha';
+const Cloud={ready:null,user:null,status:'off',unsub:[],pushed:{},cfgPushed:'',timer:null,busy:false,
+load(){if(!this.ready){const b='https://www.gstatic.com/firebasejs/10.14.1/';this.ready=Promise.all(['firebase-app','firebase-auth','firebase-firestore'].map(x=>import(b+x+'.js'))).then(([A,U,F])=>{const app=A.initializeApp(FB_CONFIG);return{U,F,auth:U.getAuth(app),db:F.getFirestore(app)}}).catch(e=>{this.ready=null;throw e})}return this.ready},
+async init(){try{const c=await this.load();c.U.onAuthStateChanged(c.auth,u=>{this.user=u;if(u)this.start().catch(e=>{console.warn(e);this.status='err';refreshCloudUI()});else{this.stop();this.status='off';refreshCloudUI()}})}catch(e){this.status='err';refreshCloudUI()}},
+kidBlob(id){const k=kid(id);return JSON.stringify({kid:k,prog:S.prog[id]||null})},
+cfgBlob(){return JSON.stringify({classes:S.classes,pin:S.pin})},
+applyKid(d){if(!d||!d.kid||!d.kid.id)return false;const id=d.kid.id;S.ku=S.ku||{};if((d.u||0)<=(S.ku[id]||0)&&kid(id))return false;
+const i=S.kids.findIndex(k=>k.id===id);if(i>=0)S.kids[i]=d.kid;else S.kids.push(d.kid);if(d.prog)S.prog[id]=d.prog;S.ku[id]=d.u||0;this.pushed[id]=this.kidBlob(id);return true},
+applyCfg(d){if(!d||(d.u||0)<=(S.cu||0))return false;if(Array.isArray(d.classes))S.classes=d.classes;if(d.pin)S.pin=d.pin;S.cu=d.u||0;this.cfgPushed=this.cfgBlob();return true},
+async start(){const {F,db}=await this.load();this.stop();this.status='sync';refreshCloudUI();
+const ref=F.doc(db,'academies',ACAD);let ok=false;try{ok=(await F.getDoc(ref)).exists()}catch(e){ok=false}
+if(!ok){try{await F.setDoc(ref,{owner:this.user.uid,created:Date.now()})}catch(e){this.status='denied';refreshCloudUI();return}}
+const col=F.collection(db,'academies',ACAD,'kids'),cref=F.doc(db,'academies',ACAD,'meta','config');
+if(S.cloudUid!==this.user.uid){const ks=await F.getDocs(col);
+if(ks.empty){this.pushed={};this.cfgPushed='';S.cloudUid=this.user.uid;saveLocal();await this.push(true)}
+else{S.kids=[];S.prog={};S.ku={};S.cu=0;ks.forEach(d=>this.applyKid(d.data()));try{const cf=await F.getDoc(cref);if(cf.exists())this.applyCfg(cf.data())}catch(e){}S.cloudUid=this.user.uid;S.delQ=[];saveLocal();softRefresh()}}
+else await this.push(false);
+this.unsub.push(F.onSnapshot(col,qs=>{let ch=false;qs.docChanges().forEach(c=>{if(c.doc.metadata.hasPendingWrites)return;if(c.type==='removed'){if(kid(c.doc.id)){S.kids=S.kids.filter(k=>k.id!==c.doc.id);delete S.prog[c.doc.id];delete this.pushed[c.doc.id];ch=true}}else if(this.applyKid(c.doc.data()))ch=true});if(ch){saveLocal();softRefresh()}},e=>console.warn(e)));
+this.unsub.push(F.onSnapshot(cref,d=>{if(d.exists()&&!d.metadata.hasPendingWrites&&this.applyCfg(d.data())){saveLocal();softRefresh()}},e=>console.warn(e)));
+this.status='on';refreshCloudUI()},
+stop(){this.unsub.forEach(f=>{try{f()}catch(e){}});this.unsub=[]},
+schedule(){if(this.status!=='on')return;clearTimeout(this.timer);this.timer=setTimeout(()=>this.push(false).catch(e=>console.warn(e)),1200)},
+async push(all){const {F,db}=await this.load();if(!this.user)return;this.busy=true;refreshCloudUI();const now=Date.now();S.ku=S.ku||{};const ws=[];
+for(const k of S.kids){const b=this.kidBlob(k.id);if(all||b!==this.pushed[k.id]){S.ku[k.id]=now;this.pushed[k.id]=b;ws.push(F.setDoc(F.doc(db,'academies',ACAD,'kids',k.id),{kid:k,prog:S.prog[k.id]||null,u:now}))}}
+for(const id of (S.delQ||[])){ws.push(F.deleteDoc(F.doc(db,'academies',ACAD,'kids',id)))}S.delQ=[];
+const cb=this.cfgBlob();if(all||cb!==this.cfgPushed){this.cfgPushed=cb;S.cu=now;ws.push(F.setDoc(F.doc(db,'academies',ACAD,'meta','config'),{classes:S.classes,pin:S.pin,u:now}))}
+saveLocal();try{await Promise.all(ws)}finally{this.busy=false;refreshCloudUI()}},
+async signIn(email,pw,create){const {U,auth}=await this.load();return create?U.createUserWithEmailAndPassword(auth,email,pw):U.signInWithEmailAndPassword(auth,email,pw)},
+async signOut(){const {U,auth}=await this.load();this.stop();await U.signOut(auth)}};
+window.__cloud=Cloud;
+function softRefresh(){if(view==='select')goSelect();else if(view==='admin')goAdmin(aTab)}
+function refreshCloudUI(){const b=document.getElementById('cloudBox');if(b)renderCloudBox(b)}
+const AUTH_MSG={'auth/email-already-in-use':'이미 만든 계정이에요. 로그인을 눌러 주세요','auth/invalid-credential':'이메일이나 비밀번호가 맞지 않아요','auth/wrong-password':'이메일이나 비밀번호가 맞지 않아요','auth/user-not-found':'없는 계정이에요. 처음이면 원장 계정 만들기를 눌러 주세요','auth/weak-password':'비밀번호는 6자 이상이어야 해요','auth/invalid-email':'이메일 주소를 확인해 주세요','auth/network-request-failed':'인터넷 연결을 확인해 주세요','auth/too-many-requests':'잠시 뒤에 다시 해 주세요'};
+function renderCloudBox(b){const C=Cloud;
+if(C.user){const st=C.status==='denied'?'<span class="tag p">이 계정은 학원 기록에 권한이 없어요</span>':C.status!=='on'?'<span class="tag y">연결하는 중</span>':C.busy?'<span class="tag y">저장하는 중</span>':'<span class="tag g">연결됨 · 저장 완료</span>';
+b.innerHTML=`<div class="fl"><span>${st}</span><span class="muted">${esc(C.user.email||'')}</span><button class="btn sm" id="cOut">연결 끊기</button></div><p class="note">이 태블릿의 아이 명단과 학습 기록이 같은 계정으로 연결된 다른 태블릿과 함께 저장돼요. 녹음 소리는 녹음한 태블릿에만 있어요.</p>`;
+b.querySelector('#cOut').onclick=async()=>{const x=b.querySelector('#cOut');if(!x.dataset.sure){x.dataset.sure=1;x.textContent='한 번 더 누르면 끊겨요';return}await C.signOut();toast('연결을 끊었어요')};return}
+if(C.status==='err'){b.innerHTML=`<p class="note">연결 기능을 불러오지 못했어요. 인터넷 연결을 확인해 주세요.</p><div class="row" style="justify-content:flex-start;margin-top:.6rem"><button class="btn sm" id="cRe">다시 시도</button></div>`;b.querySelector('#cRe').onclick=()=>{C.status='off';C.init();renderCloudBox(b)};return}
+b.innerHTML=`<p class="note" style="margin-bottom:.8rem">두 태블릿에 같은 원장님 계정으로 로그인하면 아이 명단과 학습 기록이 함께 저장돼요. 첫 태블릿에서 한 번만 '원장 계정 만들기'를 누르고, 두 번째 태블릿부터는 '로그인'을 눌러 주세요. 두 번째 태블릿은 로그인하면 그 태블릿의 예시 명단이 지워지고 학원 명단으로 바뀌어요.</p>
+<div class="fl"><input id="cE" type="email" autocomplete="username" placeholder="원장님 이메일" style="width:17rem"><input id="cP" type="password" autocomplete="current-password" placeholder="비밀번호 6자 이상" style="width:13rem"></div>
+<div class="fl"><button class="btn primary sm" id="cIn">로그인</button><button class="btn sm" id="cNew">원장 계정 만들기</button><span class="perr" id="cErr"></span></div>`;
+const go=async create=>{const e=b.querySelector('#cE').value.trim(),p=b.querySelector('#cP').value,er=b.querySelector('#cErr');if(!e||!p){er.textContent='이메일과 비밀번호를 써 주세요';return}er.textContent='';try{await C.signIn(e,p,create);toast('연결했어요')}catch(x){er.textContent=AUTH_MSG[x&&x.code]||'연결하지 못했어요'}};
+b.querySelector('#cIn').onclick=()=>go(false);b.querySelector('#cNew').onclick=()=>go(true)}
 
 /* 화면: 인트로 */
 let view='intro',curCls=0;
@@ -888,7 +936,7 @@ m.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{keep();f.cls=+b.dataset
 $('#fc').onclick=()=>m.remove();
 $('#fo').onclick=()=>{keep();f.name=f.name.trim();if(!f.name){$('#fn').focus();return toast('이름을 써 주세요')}
 if(id)Object.assign(k,{name:f.name,cls:f.cls,animal:f.animal});else S.kids.push({id:uid(),name:f.name,cls:f.cls,animal:f.animal,current:f.current,queue:[],double:false});save();m.remove();goAdmin('kids')};
-const fd=$('#fd');if(fd)fd.onclick=()=>{if(fd.dataset.sure){S.kids=S.kids.filter(x=>x.id!==id);delete S.prog[id];save();m.remove();goAdmin('kids')}else{fd.dataset.sure=1;fd.textContent='한 번 더 누르면 삭제'}}};
+const fd=$('#fd');if(fd)fd.onclick=()=>{if(fd.dataset.sure){S.kids=S.kids.filter(x=>x.id!==id);delete S.prog[id];S.delQ=(S.delQ||[]).concat(id);save();m.remove();goAdmin('kids')}else{fd.dataset.sure=1;fd.textContent='한 번 더 누르면 삭제'}}};
 document.body.appendChild(m);draw()}
 
 function aProg(){const am=$('#am');if(!S.kids.length){am.innerHTML='<div class="ahead"><h2>학습 현황</h2></div><p class="note">먼저 아이를 등록해 주세요.</p>';return}
@@ -934,19 +982,22 @@ try{await recStart(async bl=>{if(await DB.put('v|'+t,bl)){if(!S.voices.includes(
 
 function aSet(){const am=$('#am');
 am.innerHTML=`<div class="ahead"><h2>설정</h2></div>
+<div class="card"><h3>태블릿 연결 (기록 함께 쓰기)</h3><div id="cloudBox"></div></div>
 <div class="card"><h3>원장님 비밀번호</h3><div class="fl"><input id="p1" inputmode="numeric" maxlength="4" placeholder="새 비밀번호 4자리" style="width:14rem"><button class="btn primary sm" id="ps">바꾸기</button><span class="muted">처음 비밀번호는 0000이에요</span></div></div>
 <div class="card"><h3>반 이름</h3><div class="fl">${S.classes.map((c,i)=>`<input data-ci="${i}" value="${esc(c)}" maxlength="8" style="width:9rem">`).join('')}<button class="btn primary sm" id="cs">저장</button></div></div>
 <div class="card"><h3>태블릿에서 다른 앱으로 못 나가게 하기</h3><p class="note">1. 크롬에서 이 앱을 연 뒤 메뉴(⋮)에서 '홈 화면에 추가'를 눌러 설치해요. 설치한 아이콘으로 열면 주소창 없이 화면 전체로 열려요.<br>2. 태블릿 설정에서 '앱 고정'을 검색해 켜고, '고정 해제 전 PIN 요청'도 켜요.<br>3. 하하 한글을 연 상태에서 최근 앱 버튼을 누르고, 앱 아이콘을 눌러 '이 앱 고정'을 골라요. 이제 PIN 없이는 다른 앱으로 나갈 수 없어요.</p><div class="row" style="justify-content:flex-start;margin-top:.8rem"><button class="btn sm" id="fsb">전체 화면으로 보기</button></div></div>
 <div class="card"><h3>기록 백업</h3><p class="note" style="margin-bottom:.8rem">아이 명단과 학습 기록을 파일로 저장하거나 불러와요. 녹음 소리는 파일에 들어가지 않아요.</p><div class="row" style="justify-content:flex-start"><button class="btn sm" id="bx">백업 파일 저장</button><label class="btn sm" style="cursor:pointer">백업 파일 불러오기<input type="file" id="bi" accept=".json" style="display:none"></label><button class="btn sm" id="rs" style="color:var(--red)">모든 기록 지우기</button></div></div>`;
+renderCloudBox($('#cloudBox'));
 $('#ps').onclick=()=>{const v=$('#p1').value.trim();if(!/^\d{4}$/.test(v))return toast('숫자 4자리로 써 주세요');S.pin=v;save();$('#p1').value='';toast('비밀번호를 바꿨어요')};
 $('#cs').onclick=()=>{am.querySelectorAll('[data-ci]').forEach(i=>{const v=i.value.trim();if(v)S.classes[+i.dataset.ci]=v});save();toast('반 이름을 저장했어요');goAdmin('set')};
 $('#fsb').onclick=goFull;
 $('#bx').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'}));a.download='하하한글-백업-'+today()+'.json';document.body.appendChild(a);a.click();a.remove()};
-$('#bi').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const j=JSON.parse(t);if(!j.kids)throw 0;S=j;save();toast('불러왔어요');goAdmin('set')}catch(x){toast('백업 파일이 아니에요')}})};
+$('#bi').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const j=JSON.parse(t);if(!j.kids)throw 0;const cu=S.cloudUid;S=j;S.cloudUid=cu;Cloud.pushed={};save();toast('불러왔어요');goAdmin('set')}catch(x){toast('백업 파일이 아니에요')}})};
 const rs=$('#rs');rs.onclick=()=>{if(rs.dataset.sure){S.prog={};S.kids.forEach(k=>{k.queue=[];k.pending=null});save();toast('학습 기록을 지웠어요');goAdmin('set')}else{rs.dataset.sure=1;rs.textContent='한 번 더 누르면 지워져요'}}}
 
 window.__haha={LESSONS,S:()=>S,startLesson,goAdmin,goSelect,goHome,goMap,goPlay,goZoo,L:()=>L};
 goIntro();
+Cloud.init();
 if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
 </script>
