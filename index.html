@@ -9,7 +9,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>하하 한글</title>
+<title>하하 한글 2.0</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -365,6 +365,36 @@ body.admin #bg{display:none}
 .pad button.t{font-size:1rem}
 .perr{color:var(--red);font-weight:700;height:1.4rem;white-space:nowrap}
 .toast{position:fixed;left:50%;bottom:2rem;transform:translateX(-50%);background:var(--ink);color:#fff;padding:.8rem 1.4rem;border-radius:1.4rem;font-weight:700;z-index:60;white-space:nowrap}
+/* HAHA 2.0 — theme layer, original learning engine preserved */
+html[data-theme="forest"]{--wood:#286A57;--wood-d:#184C3E;--wood-l:#DCECDD;--cream:#F6F5ED;--ink:#263C33;--muted:#60756A;--line:#DCE5DA;--pink:#BD647A;--pink-l:#F7E3E8;--teal:#287C75;--teal-l:#E0F1EA;--yellow:#E3B650;--yellow-l:#FFF1D0;--green:#32815B}
+html[data-theme="studio"]{--wood:#505FA5;--wood-d:#354477;--wood-l:#E4E8FA;--cream:#F5F6FA;--ink:#252B45;--muted:#65708B;--line:#E0E4EE;--pink:#B55D82;--pink-l:#F8E4EF;--teal:#447F9C;--teal-l:#E2F0F6;--yellow:#DDAE46;--yellow-l:#FFF3D8}
+html[data-theme="world"]{--wood:#176F9C;--wood-d:#154E70;--wood-l:#D7EEF8;--cream:#EDF8FA;--ink:#203B53;--muted:#54778B;--line:#D5EAF2;--pink:#C25F79;--pink-l:#FCE5E8;--teal:#25877D;--teal-l:#DCF5EB;--yellow:#F0B94A;--yellow-l:#FFF2C9}
+html:not([data-theme="classic"]) body,html:not([data-theme="classic"]) #admin{background:var(--cream)}
+html:not([data-theme="classic"]) .wood{background:linear-gradient(145deg,var(--wood),var(--wood-d))}
+html:not([data-theme="classic"]) .sign{box-shadow:0 22px 60px #233d3526;border-radius:2.5rem;max-height:55vh}
+html:not([data-theme="classic"]) .sign-in{border:1px solid #ffffff60}
+html:not([data-theme="classic"]) .today{box-shadow:0 12px 30px #253e3522;position:relative;overflow:hidden}
+html:not([data-theme="classic"]) .tin{border:1px solid #ffffff55;position:relative;z-index:1}
+html:not([data-theme="classic"]) .today:after{content:"ㅎ";position:absolute;right:-.5rem;bottom:-2rem;color:#ffffff14;font-size:15rem;font-weight:900;line-height:1;pointer-events:none}
+html:not([data-theme="classic"]) .tile,html:not([data-theme="classic"]) .kid,html:not([data-theme="classic"]) .card,html:not([data-theme="classic"]) .bigcard{border-width:1px;box-shadow:0 5px 18px #253e350a}
+html:not([data-theme="classic"]) .t-pink,html:not([data-theme="classic"]) .t-teal,html:not([data-theme="classic"]) .t-yellow{border-color:transparent}
+html:not([data-theme="classic"]) .anav{background:#fff;border-right:1px solid var(--line)}
+html:not([data-theme="classic"]) .card{border-radius:1rem}
+html:not([data-theme="classic"]) .bgl{opacity:.07}
+html[data-theme="studio"] .hills,html[data-theme="studio"] .cloud,html[data-theme="studio"] .bgl{display:none}
+html[data-theme="world"] .hills{filter:hue-rotate(45deg)}
+.v2eyebrow{font-size:.8rem;letter-spacing:.16em;font-weight:700;color:var(--muted);text-align:center}
+.v2subtitle{font-size:1.05rem;color:var(--muted);text-align:center;font-weight:600}
+.v2metric{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.8rem;margin-bottom:1rem}
+.v2metric .card{margin:0}.v2metric small{color:var(--muted);display:block;font-size:.8rem}.v2metric strong{display:block;font-size:1.9rem;color:var(--wood-d);margin-top:.35rem}
+.v2bar{height:.6rem;border-radius:1rem;background:var(--wood-l);overflow:hidden}.v2bar i{display:block;height:100%;background:var(--wood);border-radius:1rem}
+.v2themes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.6rem}
+.v2theme{padding:.8rem .4rem;border:2px solid var(--line);border-radius:.8rem;background:#fff;white-space:normal;font-weight:700}
+.v2theme[aria-pressed="true"]{border-color:var(--wood);outline:2px solid var(--wood-l)}
+.v2swatch{display:block;height:2rem;border-radius:.4rem;margin-bottom:.5rem}
+.v2progress{height:.45rem;width:70%;background:#ffffff33;border-radius:1rem;overflow:hidden}.v2progress i{height:100%;display:block;background:#fff;border-radius:1rem}
+button:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
+@media (max-width:700px) and (orientation:portrait){#home .hgrid{grid-template-columns:1fr;grid-template-rows:minmax(12rem,1fr) auto;overflow:auto;padding:1rem}.tiles{grid-template-rows:repeat(3,5rem)}.hstamp{flex-wrap:wrap;gap:.4rem;padding:.4rem}.bar{padding:.8rem}.bar h1{font-size:1.3rem;white-space:normal}.bar .side{width:auto}.tabs{overflow-x:auto;justify-content:flex-start}.kids{padding:1rem;grid-template-columns:repeat(2,minmax(0,1fr))}.v2metric,.v2themes{grid-template-columns:repeat(2,minmax(0,1fr))}#admin{flex-direction:column}.anav{width:100%;flex-direction:row;overflow-x:auto;padding:.5rem}.anav .mini,.anav .grow{display:none}.amain{padding:1rem}.split{grid-template-columns:1fr}.klist{max-height:10rem;overflow:auto}.card{overflow-x:auto}.ahead{flex-wrap:wrap}}
 </style>
 </head>
 <body>
@@ -651,9 +681,12 @@ b.querySelector('#cIn').onclick=()=>go(false);b.querySelector('#cNew').onclick=(
 
 /* 화면: 인트로 */
 let view='intro',curCls=0;
+const V2_THEMES=[['forest','한글 숲','#286A57'],['studio','스튜디오','#505FA5'],['world','한글 월드','#176F9C'],['classic','기존 원목','#B26B35']];
+function v2Theme(t){if(!V2_THEMES.some(x=>x[0]===t))t='forest';document.documentElement.dataset.theme=t;try{localStorage.setItem('haha-theme-v2',t)}catch(e){}}
+try{v2Theme(localStorage.getItem('haha-theme-v2')||'forest')}catch(e){v2Theme('forest')}
 function goIntro(){view='intro';document.body.classList.remove('admin');app.innerHTML=`<div class="screen" id="intro">
 <div class="sign wood"><div class="sign-in">${BOOK}<div class="logo-t">하하 한글</div><div class="logo-s">한글 문해력 교육원</div></div></div>
-<button class="btn primary start" id="startBtn">시작하기</button>
+<div class="v2subtitle">한글을 배우는 즐거움, 세상을 읽는 기쁨</div><button class="btn primary start" id="startBtn">시작하기</button>
 <div class="parade" aria-hidden="true">${['🐰','🐻','🦊','🐼','🐥','🐯'].map((a,i)=>`<span style="animation-delay:${i*.15}s">${a}</span>`).join('')}</div></div>`;
 $('#startBtn').onclick=()=>{goFull();tone(660,.15);goSelect()}}
 
@@ -682,7 +715,7 @@ function todayCount(P){const td=today();return P.log.filter(l=>l.d===td).length}
 function goHome(id){leave();const k=kid(id);if(!k)return goSelect();view='home';curKid=id;document.body.classList.remove('admin');
 const P=prog(id),n=nextLesson(k),st=stageOf(n),done=todayCount(P)>=(k.double?2:1),fill=P.stamps%10;
 app.innerHTML=`<div class="screen" id="home">${kidBar(k,'안녕, '+esc(k.name)+'!','select')}
-<div class="hgrid"><button class="today wood" id="goToday"><div class="tin"><div class="tl">${done?'오늘 학습 끝! 참 잘했어요':'오늘의 학습'}</div><div class="tn">${n}회차</div><div class="tt">${esc(LESSONS[n-1].t)}</div><div class="tbtn">${done?'한 번 더 연습하기':'시작하기'}</div></div></button>
+<div class="hgrid"><button class="today wood" id="goToday"><div class="tin"><div class="tl">${done?'오늘 학습 끝! 참 잘했어요':'오늘의 학습'}</div><div class="tn">${n}회차</div><div class="tt">${esc(LESSONS[n-1].t)}</div><div class="v2progress" role="progressbar" aria-label="전체 회차 진행" aria-valuemin="0" aria-valuemax="120" aria-valuenow="${new Set(P.log.filter(l=>l.pass).map(l=>l.n)).size}"><i style="width:${Math.min(100,new Set(P.log.filter(l=>l.pass).map(l=>l.n)).size/120*100)}%"></i></div><div class="tbtn">${done?'한 번 더 연습하기':'시작하기'}</div></div></button>
 <div class="tiles"><button class="tile t-pink" id="goPlay"><span class="te">🧩</span><b>자음·모음 놀이터</b><em>글자를 만들어 봐요</em></button>
 <button class="tile t-teal" id="goMap"><span class="te">${STAGE_EMO[st-1]}</span><b>한글 길</b><em>지금 ${STAGE_NAMES[st-1]}에 있어요</em></button>
 <button class="tile t-yellow" id="goZoo"><span class="te">🐾</span><b>내 동물원</b><em>친구 ${zoo(k).length}마리</em></button></div></div>
@@ -738,7 +771,7 @@ app.querySelectorAll('.za[data-a]').forEach(b=>b.onclick=()=>{const a=b.dataset.
 function openPin(){let v='';const m=document.createElement('div');m.className='modal';
 const draw=(err)=>{m.innerHTML=`<div class="mbox pin" style="width:auto"><h3>원장님 비밀번호</h3><div class="pdots">${[0,1,2,3].map(i=>`<i class="${i<v.length?'f':''}"></i>`).join('')}</div><div class="perr">${err||''}</div>
 <div class="pad">${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-n="${n}">${n}</button>`).join('')}<button class="t" data-n="c">취소</button><button data-n="0">0</button><button class="t" data-n="b">지우기</button></div></div>`;
-m.querySelectorAll('.pad button').forEach(b=>b.onclick=()=>{const n=b.dataset.n;if(n==='c')return m.remove();if(n==='b'){v=v.slice(0,-1);return draw()}v+=n;if(v.length<4)return draw();if(v===S.pin){m.remove();goAdmin('kids')}else{v='';draw('비밀번호가 달라요')}})};
+m.querySelectorAll('.pad button').forEach(b=>b.onclick=()=>{const n=b.dataset.n;if(n==='c')return m.remove();if(n==='b'){v=v.slice(0,-1);return draw()}v+=n;if(v.length<4)return draw();if(v===S.pin){m.remove();goAdmin('dash')}else{v='';draw('비밀번호가 달라요')}})};
 draw();document.body.appendChild(m)}
 
 /* 학습 만들기 */
@@ -935,15 +968,18 @@ m.innerHTML=`<div class="ib"><div class="isign wood"><div class="in"><div class=
 document.body.appendChild(m);m.querySelector('#iClose').onclick=()=>{m.remove();if(location.hash==='#install')history.replaceState(null,'',location.pathname)};m.querySelector('#iPrint').onclick=()=>{try{window.print()}catch(e){toast('이 화면에서는 인쇄할 수 없어요')}}}
 
 /* 관리자 */
-let aTab='kids',aKid=null,aVoiceN=1;
+let aTab='dash',aKid=null,aVoiceN=1;
 function goAdmin(tab){leave();view='admin';document.body.classList.add('admin');aTab=tab||aTab;if(!aKid||!kid(aKid))aKid=S.kids[0]&&S.kids[0].id;
-const nv=[['kids','아이 관리',IC.kids],['prog','학습 현황',IC.chart],['voice','소리 녹음',IC.wave],['set','설정',IC.gear]];
+const nv=[['dash','대시보드',IC.chart],['kids','아이 관리',IC.kids],['prog','학습 현황',IC.chart],['voice','소리 녹음',IC.wave],['set','설정',IC.gear]];
 app.innerHTML=`<div class="screen" id="admin"><nav class="anav">${miniLogo}${nv.map(([k,t,i])=>`<button class="nv ${aTab===k?'on':''}" data-t="${k}">${i}${t}</button>`).join('')}<div class="grow"></div><button class="nv" id="exitA">${IC.out}학습 화면으로</button></nav><main class="amain" id="am"></main></div>`;
 app.querySelectorAll('.nv[data-t]').forEach(b=>b.onclick=()=>goAdmin(b.dataset.t));$('#exitA').onclick=()=>{goFull();goSelect()};
-({kids:aKids,prog:aProg,voice:aVoice,set:aSet})[aTab]()}
+({dash:aDash,kids:aKids,prog:aProg,voice:aVoice,set:aSet})[aTab]()}
 const allCls=()=>[...S.classes,'졸업'];
 const lessonOpts=sel=>LESSONS.map(l=>`<option value="${l.n}" ${l.n===sel?'selected':''}>${l.n}회차 · ${esc(l.t)}</option>`).join('');
 
+function aDash(){const am=$('#am'),ks=S.kids.filter(k=>k.cls<4),td=today();const rows=ks.map(k=>({k,p:prog(k.id)}));const done=rows.filter(({k,p})=>todayCount(p)>=(k.double?2:1)).length;const review=rows.filter(({p})=>Object.values(p.review||{}).some(r=>r.due<=p.sessions)).length;const pending=ks.filter(k=>k.pending).length;
+am.innerHTML=`<div class="ahead"><h2>하하 한글 대시보드</h2><span class="muted">${esc(td)} · 실제 저장 기록</span></div><div class="v2metric">${[['재원생',ks.length+'명'],['오늘 완료',done+'명'],['복습 대상',review+'명'],['승인 대기',pending+'명']].map(([t,v])=>`<div class="card"><small>${t}</small><strong>${v}</strong></div>`).join('')}</div><div class="card"><h3>오늘 학습 현황</h3><div class="v2bar"><i style="width:${ks.length?done/ks.length*100:0}%"></i></div><p class="note">${done} / ${ks.length}명 완료</p></div><div class="card"><h3>학생별 학습 기록</h3><table class="tbl"><thead><tr><th>이름</th><th>반</th><th>다음 회차</th><th>복습 글자</th><th>오늘</th><th></th></tr></thead><tbody>${rows.map(({k,p})=>`<tr><td>${k.animal} ${esc(k.name)}</td><td>${esc(S.classes[k.cls]||'')}</td><td>${nextLesson(k)}회</td><td>${Object.keys(p.review||{}).length}개</td><td>${todayCount(p)>=(k.double?2:1)?'완료':'학습 전 또는 진행 중'}</td><td><button class="btn sm" data-dash-k="${esc(k.id)}">상세</button></td></tr>`).join('')}</tbody></table>${rows.length?'':'<p class="note">아이 관리에서 학생을 등록해 주세요.</p>'}</div>`;
+am.querySelectorAll('[data-dash-k]').forEach(b=>b.onclick=()=>{aKid=b.dataset.dashK;goAdmin('prog')})}
 function aKids(){const am=$('#am');
 am.innerHTML=`<div class="ahead"><h2>아이 관리 <span class="muted" style="font-size:1rem">${S.kids.filter(k=>k.cls<4).length}명</span></h2><div class="row">${S.lastPromote?'<button class="btn sm" id="undoP">반 올리기 되돌리기</button>':''}<button class="btn sm" id="promo">새해 반 올리기</button><button class="btn primary sm" id="add">아이 추가</button></div></div>
 <div class="card"><table class="tbl"><thead><tr><th></th><th>이름</th><th>반</th><th>진도</th><th>도장</th><th></th></tr></thead><tbody>
@@ -1015,12 +1051,13 @@ try{await recStart(async bl=>{if(await DB.put('v|'+t,bl)){if(!S.voices.includes(
 
 function aSet(){const am=$('#am');
 am.innerHTML=`<div class="ahead"><h2>설정</h2></div>
-<div class="card"><h3>태블릿 연결 (기록 함께 쓰기)</h3><div id="cloudBox"></div></div>
+<div class="card"><h3>디자인 테마</h3><p class="note">이 기기에 적용되는 디자인입니다. 학습 기록은 변경되지 않아요.</p><div class="v2themes" id="v2themes"></div></div><div class="card"><h3>태블릿 연결 (기록 함께 쓰기)</h3><div id="cloudBox"></div></div>
 <div class="card"><h3>태블릿 설치 안내판</h3><p class="note" style="margin-bottom:.8rem">새 태블릿에서 QR 코드를 찍어 바로 설치할 수 있는 안내판이에요. 이 화면을 띄워 두거나 인쇄해서 붙여 두세요. 컴퓨터에서는 주소 끝에 #install을 붙여 열면 바로 안내판이 나와요.</p><div class="row" style="justify-content:flex-start"><button class="btn primary sm" id="instB">안내판 열기</button></div></div>
-<div class="card"><h3>원장님 비밀번호</h3><div class="fl"><input id="p1" inputmode="numeric" maxlength="4" placeholder="새 비밀번호 4자리" style="width:14rem"><button class="btn primary sm" id="ps">바꾸기</button><span class="muted">처음 비밀번호는 0000이에요</span></div></div>
+<div class="card"><h3>원장님 비밀번호</h3><div class="fl"><input id="p1" inputmode="numeric" maxlength="4" placeholder="새 비밀번호 4자리" style="width:14rem"><button class="btn primary sm" id="ps">바꾸기</button><span class="muted">${S.pin==='0000'?'기본 비밀번호입니다. 반드시 변경해 주세요.':'관리자 PIN은 기기 화면 잠금용입니다.'}</span></div></div>
 <div class="card"><h3>반 이름</h3><div class="fl">${S.classes.map((c,i)=>`<input data-ci="${i}" value="${esc(c)}" maxlength="8" style="width:9rem">`).join('')}<button class="btn primary sm" id="cs">저장</button></div></div>
 <div class="card"><h3>태블릿에서 다른 앱으로 못 나가게 하기</h3><p class="note">1. 크롬에서 이 앱을 연 뒤 메뉴(⋮)에서 '홈 화면에 추가'를 눌러 설치해요. 설치한 아이콘으로 열면 주소창 없이 화면 전체로 열려요.<br>2. 태블릿 설정에서 '앱 고정'을 검색해 켜고, '고정 해제 전 PIN 요청'도 켜요.<br>3. 하하 한글을 연 상태에서 최근 앱 버튼을 누르고, 앱 아이콘을 눌러 '이 앱 고정'을 골라요. 이제 PIN 없이는 다른 앱으로 나갈 수 없어요.</p><div class="row" style="justify-content:flex-start;margin-top:.8rem"><button class="btn sm" id="fsb">전체 화면으로 보기</button></div></div>
 <div class="card"><h3>기록 백업</h3><p class="note" style="margin-bottom:.8rem">아이 명단과 학습 기록을 파일로 저장하거나 불러와요. 녹음 소리는 파일에 들어가지 않아요.</p><div class="row" style="justify-content:flex-start"><button class="btn sm" id="bx">백업 파일 저장</button><label class="btn sm" style="cursor:pointer">백업 파일 불러오기<input type="file" id="bi" accept=".json" style="display:none"></label><button class="btn sm" id="rs" style="color:var(--red)">모든 기록 지우기</button></div></div>`;
+const themeBox=$('#v2themes');const drawThemes=()=>{themeBox.innerHTML=V2_THEMES.map(([t,label,c])=>`<button class="v2theme" data-theme-choice="${t}" aria-pressed="${document.documentElement.dataset.theme===t}"><span class="v2swatch" style="background:${c}"></span>${label}</button>`).join('');themeBox.querySelectorAll('button').forEach(b=>b.onclick=()=>{v2Theme(b.dataset.themeChoice);drawThemes()})};drawThemes();
 renderCloudBox($('#cloudBox'));
 $('#ps').onclick=()=>{const v=$('#p1').value.trim();if(!/^\d{4}$/.test(v))return toast('숫자 4자리로 써 주세요');S.pin=v;save();$('#p1').value='';toast('비밀번호를 바꿨어요')};
 $('#cs').onclick=()=>{am.querySelectorAll('[data-ci]').forEach(i=>{const v=i.value.trim();if(v)S.classes[+i.dataset.ci]=v});save();toast('반 이름을 저장했어요');goAdmin('set')};
