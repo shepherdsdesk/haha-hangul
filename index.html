@@ -746,8 +746,15 @@ $('#backBtn').onclick=()=>goHome(id);app.querySelectorAll('.tab').forEach(b=>b.o
 function pCards(){const groups=[['자음',CONS],['쌍자음',DCONS],['모음',VOWS],['겹모음',CVOWS]];const sel=PS.sel||CONS[0];const cv=isVowel(sel[0])?'v':'c';
 $('#pb').innerHTML=`<div class="cgrid">${groups.map(([g,arr])=>`<div><div class="cgl">${g}</div><div class="cgb">${arr.map(j=>`<button class="jm ${isVowel(j[0])?'v':'c'} ${sel[0]===j[0]?'on':''}" data-j="${j[0]}">${j[0]}</button>`).join('')}</div></div>`).join('')}</div>
 <div class="jdet ${cv}"><div class="jbig pop">${sel[0]}</div><div class="jname">${sel[1]}</div><div class="row"><button class="btn sm" id="jn">${IC.spk}이름</button><button class="btn sm teal" id="js">${IC.spk}소리</button></div><button class="jex" id="jx"><span>${sel[4]}</span>${sel[3]}</button></div>`;
-const all=[...CONS,...DCONS,...VOWS,...CVOWS];$('#pb').querySelectorAll('[data-j]').forEach(b=>b.onclick=()=>{PS.sel=all.find(j=>j[0]===b.dataset.j);pCards();speak(PS.sel[1])});
-$('#jn').onclick=()=>speak(sel[1]);$('#js').onclick=()=>speak(sel[2]);$('#jx').onclick=()=>speak(sel[3])}
+const all=[...CONS,...DCONS,...VOWS,...CVOWS];const pb=$('#pb'),detail=pb.querySelector('.jdet'),big=detail.querySelector('.jbig'),name=detail.querySelector('.jname'),example=$('#jx');
+const current=()=>PS.sel||CONS[0];
+pb.querySelectorAll('[data-j]').forEach(b=>b.onclick=()=>{const j=all.find(x=>x[0]===b.dataset.j);if(!j)return;PS.sel=j;
+pb.querySelectorAll('[data-j]').forEach(x=>{const active=x===b;x.classList.toggle('on',active);x.setAttribute('aria-pressed',String(active))});
+detail.classList.toggle('v',isVowel(j[0]));detail.classList.toggle('c',!isVowel(j[0]));
+big.textContent=j[0];name.textContent=j[1];example.querySelector('span').textContent=j[4];example.lastChild.textContent=j[3];
+speak(j[1])});
+pb.querySelectorAll('[data-j]').forEach(b=>b.setAttribute('aria-pressed',String(b.classList.contains('on'))));
+$('#jn').onclick=()=>speak(current()[1]);$('#js').onclick=()=>speak(current()[2]);$('#jx').onclick=()=>speak(current()[3])}
 function pMaker(){const m=PS.mk,res=m.c>=0&&m.v>=0?compose(m.c,m.v,m.j):'';
 $('#pb').innerHTML=`<div class="maker"><div class="slots"><div class="slot c ${m.c>=0?'f':''}"><em>첫소리</em><b>${m.c>=0?CHO[m.c]:''}</b></div><span class="plus">+</span><div class="slot v ${m.v>=0?'f':''}"><em>가운데</em><b>${m.v>=0?JUNG[m.v]:''}</b></div><span class="plus">+</span><div class="slot j ${m.j?'f':''}"><em>받침</em><b>${m.j?JONG[m.j]:''}</b></div><span class="plus">=</span><button class="result" id="mr"><span class="${res?'pop':''}">${res||'?'}</span></button></div>
 <div class="pal"><div class="palr">${[...CHO].map((c,i)=>`<button class="jm c sm" data-c="${i}">${c}</button>`).join('')}</div><div class="palr">${[...JUNG].map((v,i)=>`<button class="jm v sm" data-v="${i}">${v}</button>`).join('')}</div></div>
